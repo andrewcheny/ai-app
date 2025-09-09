@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arctic Strategic Map</title>
+    <script src="https://cdn.jsdelivr.net/npm/impress@2.0.0/js/impress.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        #impress {
+            width: 100%;
+            height: 100vh;
+        }
+
+        .step {
+            position: relative;
+            width: 900px;
+            padding: 40px;
+            margin: 20px auto;
+            border-radius: 10px;
+            font-size: 24px;
+            line-height: 1.5;
+        }
+
+        /* Arctic Map Container */
+        .arctic-map {
+            width: 800px;
+            height: 600px;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            border: 3px solid #4a90e2;
+            border-radius: 20px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(74, 144, 226, 0.3);
+        }
+
+        /* Countries */
+        .country {
+            position: absolute;
+            border-radius: 15px;
+            padding: 15px;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.5s ease;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .russia {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            color: white;
+            width: 200px;
+            height: 150px;
+            top: 50px;
+            left: 400px;
+            transform: rotate(-10deg);
+        }
+
+        .china {
+            background: linear-gradient(135deg, #ff4757, #ff3742);
+            color: white;
+            width: 120px;
+            height: 80px;
+            top: 200px;
+            left: 500px;
+            transform: rotate(5deg);
+        }
+
+        .usa {
+            background: linear-gradient(135deg, #3742fa, #2f3542);
+            color: white;
+            width: 150px;
+            height: 100px;
+            top: 150px;
+            left: 100px;
+            transform: rotate(8deg);
+        }
+
+        .canada {
+            background: linear-gradient(135deg, #70a1ff, #5352ed);
+            color: white;
+            width: 180px;
+            height: 120px;
+            top: 80px;
+            left: 200px;
+            transform: rotate(-5deg);
+        }
+
+        .norway {
+            background: linear-gradient(135deg, #7bed9f, #2ed573);
+            color: white;
+            width: 100px;
+            height: 70px;
+            top: 120px;
+            left: 350px;
+            transform: rotate(15deg);
+        }
+
+        /* Strategic Points */
+        .strategic-point {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ffa502;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 20px rgba(255, 165, 2, 0.8);
+        }
+
+        .strategic-point::after {
+            content: attr(data-label);
+            position: absolute;
+            top: 25px;
+            left: -30px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .strategic-point:hover::after {
+            opacity: 1;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Shipping Routes */
+        .shipping-route {
+            position: absolute;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #ff6b6b, transparent);
+            animation: routeFlow 3s linear infinite;
+        }
+
+        .route1 {
+            top: 180px;
+            left: 150px;
+            width: 300px;
+            transform: rotate(-15deg);
+        }
+
+        .route2 {
+            top: 250px;
+            left: 200px;
+            width: 250px;
+            transform: rotate(10deg);
+        }
+
+        @keyframes routeFlow {
+            0% { background-position: -100% 0; }
+            100% { background-position: 100% 0; }
+        }
+
+        /* Resource Indicators */
+        .resource {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            animation: resourceGlow 1.5s ease-in-out infinite alternate;
+        }
+
+        .oil { background: #2c2c54; top: 100px; left: 450px; }
+        .gas { background: #40407a; top: 120px; left: 480px; }
+        .minerals { background: #706fd3; top: 140px; left: 420px; }
+
+        @keyframes resourceGlow {
+            0% { box-shadow: 0 0 5px currentColor; }
+            100% { box-shadow: 0 0 20px currentColor; }
+        }
+
+        /* Title and Info */
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .info-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.9);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Animation triggers */
+        .animate-in {
+            animation: slideIn 1s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Hover effects */
+        .country:hover {
+            transform: scale(1.1) rotate(0deg);
+            z-index: 10;
+        }
+
+        .step.active .country {
+            animation: slideIn 0.8s ease-out;
+        }
+
+        .step.active .strategic-point {
+            animation: slideIn 1s ease-out, pulse 2s infinite;
+        }
+
+        .step.active .shipping-route {
+            animation: slideIn 1.2s ease-out, routeFlow 3s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div id="impress">
+        
+        <!-- Main Arctic Map View -->
+        <div class="step" data-x="0" data-y="0" data-z="0" data-scale="1">
+            <div class="title">Arctic Strategic Theater</div>
+            <div class="arctic-map">
+                
+                <!-- Countries -->
+                <div class="country russia">
+                    🇷🇺 RUSSIA<br>
+                    <small>Northern Fleet<br>Murmansk Base</small>
+                </div>
+                
+                <div class="country china">
+                    🇨🇳 CHINA<br>
+                    <small>Polar Silk Road</small>
+                </div>
+                
+                <div class="country usa">
+                    🇺🇸 USA<br>
+                    <small>Alaska Command<br>Thule Base</small>
+                </div>
+                
+                <div class="country canada">
+                    🇨🇦 CANADA<br>
+                    <small>Arctic Sovereignty<br>Northwest Passage</small>
+                </div>
+                
+                <div class="country norway">
+                    🇳🇴 NORWAY<br>
+                    <small>Svalbard</small>
+                </div>
+                
+                <!-- Strategic Points -->
+                <div class="strategic-point" style="top: 90px; left: 380px;" data-label="Murmansk Naval Base"></div>
+                <div class="strategic-point" style="top: 160px; left: 120px;" data-label="Thule Air Base"></div>
+                <div class="strategic-point" style="top: 200px; left: 250px;" data-label="Northwest Passage"></div>
+                <div class="strategic-point" style="top: 130px; left: 520px;" data-label="Northern Sea Route"></div>
+                <div class="strategic-point" style="top: 300px; left: 400px;" data-label="Bering Strait"></div>
+                
+                <!-- Shipping Routes -->
+                <div class="shipping-route route1"></div>
+                <div class="shipping-route route2"></div>
+                
+                <!-- Resources -->
+                <div class="resource oil" title="Oil Reserves"></div>
+                <div class="resource gas" title="Natural Gas"></div>
+                <div class="resource minerals" title="Rare Earth Minerals"></div>
+                
+            </div>
+            
+            <div class="info-panel">
+                <strong>Arctic Competition Overview</strong><br>
+                • Climate change opens new routes<br>
+                • $13 trillion in untapped resources<br>
+                • Strategic shipping lanes at stake<br>
+                • Military bases positioning for control
+            </div>
+        </div>
+        
+        <!-- Resource Focus View -->
+        <div class="step" data-x="1200" data-y="0" data-z="-1000" data-rotate-y="30" data-scale="1.5">
+            <div class="title">Resource Distribution</div>
+            <div style="background: rgba(255,255,255,0.9); padding: 30px; border-radius: 15px;">
+                <h2 style="color: #2c3e50;">Arctic Resources at Stake</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 18px;">
+                    <div>
+                        <h3 style="color: #e74c3c;">🛢️ Energy Resources</h3>
+                        <ul>
+                            <li>13% of global oil reserves</li>
+                            <li>30% of global gas reserves</li>
+                            <li>Untapped offshore fields</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="color: #3498db;">⚒️ Strategic Minerals</h3>
+                        <ul>
+                            <li>Rare earth elements</li>
+                            <li>Critical defense materials</li>
+                            <li>Technology components</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Shipping Routes Focus -->
+        <div class="step" data-x="-1200" data-y="0" data-z="-1000" data-rotate-y="-30" data-scale="1.5">
+            <div class="title">Critical Shipping Lanes</div>
+            <div style="background: rgba(255,255,255,0.9); padding: 30px; border-radius: 15px;">
+                <h2 style="color: #2c3e50;">New Arctic Passages</h2>
+                <div style="font-size: 18px;">
+                    <h3 style="color: #27ae60;">🚢 Northern Sea Route (Russia)</h3>
+                    <p>• 40% shorter than Suez Canal<br>• Russian-controlled waters<br>• Year-round accessibility by 2030</p>
+                    
+                    <h3 style="color: #2980b9;">🚢 Northwest Passage (Canada)</h3>
+                    <p>• Links Atlantic & Pacific<br>• Canadian sovereignty claims<br>• International waters dispute</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Military Positioning -->
+        <div class="step" data-x="0" data-y="1000" data-z="-2000" data-rotate-x="20" data-scale="2">
+            <div class="title">Military Positioning</div>
+            <div style="background: rgba(255,255,255,0.9); padding: 30px; border-radius: 15px;">
+                <h2 style="color: #2c3e50;">Strategic Military Assets</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; font-size: 16px;">
+                    <div style="text-align: center;">
+                        <h3 style="color: #e74c3c;">🇷🇺 Russia</h3>
+                        <p>• Northern Fleet<br>• Arctic Brigade<br>• Nuclear Icebreakers<br>• Coastal Missile Systems</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <h3 style="color: #3498db;">🇺🇸 USA</h3>
+                        <p>• Alaska Command<br>• Thule Air Base<br>• Coast Guard Patrol<br>• NATO Coordination</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <h3 style="color: #e67e22;">🇨🇦 Canada</h3>
+                        <p>• Arctic Rangers<br>• Operation NANOOK<br>• Patrol Vessels<br>• Sovereignty Patrols</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Overview Return -->
+        <div class="step" data-x="0" data-y="0" data-z="0" data-scale="0.5" data-rotate-z="360">
+            <div class="title">Arctic Wargame Theater</div>
+            <div style="text-align: center; background: rgba(255,255,255,0.9); padding: 30px; border-radius: 15px;">
+                <h2 style="color: #2c3e50;">Ready to Begin Simulation</h2>
+                <p style="font-size: 20px; color: #34495e;">
+                    Three powers compete for Arctic dominance.<br>
+                    Resources, routes, and strategic position at stake.<br>
+                    <strong>Your mission: Navigate the frozen frontier.</strong>
+                </p>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        // Initialize impress.js
+        impress().init();
+        
+        // Auto-advance through slides initially
+        let currentStep = 0;
+        const steps = document.querySelectorAll('.step');
+        
+        function autoAdvance() {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                impress().goto(currentStep);
+                setTimeout(autoAdvance, 4000); // 4 seconds per slide
+            }
+        }
+        
+        // Start auto-advance after 2 seconds
+        setTimeout(autoAdvance, 2000);
+        
+        // Add hover effects for countries
+        document.querySelectorAll('.country').forEach(country => {
+            country.addEventListener('mouseenter', function() {
+                this.style.transform += ' scale(1.1)';
+                this.style.zIndex = '10';
+            });
+            
+            country.addEventListener('mouseleave', function() {
+                this.style.transform = this.style.transform.replace(' scale(1.1)', '');
+                this.style.zIndex = '1';
+            });
+        });
+        
+        // Stop auto-advance on user interaction
+        document.addEventListener('keydown', function() {
+            clearTimeout(autoAdvance);
+        });
+        
+        document.addEventListener('click', function() {
+            clearTimeout(autoAdvance);
+        });
+    </script>
+</body>
+</html>

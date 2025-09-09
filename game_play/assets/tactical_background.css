@@ -1,0 +1,206 @@
+/* Tactical Video Background Simulation */
+body, .stApp {
+    background: #0f0f0f !important;
+    overflow: hidden;
+}
+
+.stApp::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1000;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(0, 100, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 100, 0, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(0, 255, 100, 0.1) 0%, transparent 50%),
+        linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 30%, #2e1a1a 70%, #1a0a0a 100%);
+    animation: backgroundShift 8s ease-in-out infinite;
+}
+
+@keyframes backgroundShift {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    25% { transform: scale(1.1) rotate(1deg); }
+    50% { transform: scale(0.95) rotate(-1deg); }
+    75% { transform: scale(1.05) rotate(0.5deg); }
+}
+
+/* Animated grid overlay */
+.tactical-grid {
+    position: absolute;
+    width: 120%;
+    height: 120%;
+    background-image: 
+        linear-gradient(rgba(0, 255, 127, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 127, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
+}
+
+/* Radar sweep effect */
+.radar-sweep {
+    position: absolute;
+    top: 10%;
+    right: 10%;
+    width: 200px;
+    height: 200px;
+    border: 2px solid rgba(0, 255, 127, 0.3);
+    border-radius: 50%;
+    background: radial-gradient(circle, transparent 40%, rgba(0, 255, 127, 0.1) 70%);
+}
+
+.radar-sweep::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2px;
+    height: 80px;
+    background: linear-gradient(to top, transparent, #00ff7f);
+    transform-origin: bottom;
+    animation: radarSpin 4s linear infinite;
+}
+
+@keyframes radarSpin {
+    0% { transform: rotate(0deg) translate(-1px, -80px); }
+    100% { transform: rotate(360deg) translate(-1px, -80px); }
+}
+
+/* Floating data points */
+.data-point {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #00ff7f;
+    border-radius: 50%;
+    animation: floatData 15s linear infinite;
+    box-shadow: 0 0 10px rgba(0, 255, 127, 0.5);
+}
+
+.data-point:nth-child(1) { top: 20%; left: 15%; animation-delay: 0s; }
+.data-point:nth-child(2) { top: 60%; left: 25%; animation-delay: 2s; }
+.data-point:nth-child(3) { top: 40%; left: 80%; animation-delay: 4s; }
+.data-point:nth-child(4) { top: 80%; left: 70%; animation-delay: 6s; }
+.data-point:nth-child(5) { top: 30%; left: 50%; animation-delay: 8s; }
+
+@keyframes floatData {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.5); }
+}
+
+/* Strategic lines connecting points */
+.tactical-line {
+    position: absolute;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 127, 0.4), transparent);
+    animation: lineGlow 8s ease-in-out infinite;
+}
+
+.tactical-line:nth-child(1) {
+    top: 25%;
+    left: 10%;
+    width: 200px;
+    transform: rotate(45deg);
+    animation-delay: 0s;
+}
+
+.tactical-line:nth-child(2) {
+    top: 70%;
+    left: 60%;
+    width: 150px;
+    transform: rotate(-30deg);
+    animation-delay: 3s;
+}
+
+@keyframes lineGlow {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.8; }
+}
+
+/* HUD elements */
+.hud-element {
+    position: absolute;
+    color: rgba(0, 255, 127, 0.6);
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    border: 1px solid rgba(0, 255, 127, 0.3);
+    padding: 5px;
+    background: rgba(0, 0, 0, 0.2);
+    animation: hudBlink 3s ease-in-out infinite;
+}
+
+.hud-element:nth-child(1) {
+    top: 5%;
+    left: 5%;
+    animation-delay: 0s;
+}
+
+.hud-element:nth-child(2) {
+    bottom: 5%;
+    right: 5%;
+    animation-delay: 1.5s;
+}
+
+@keyframes hudBlink {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.9; }
+}
+
+/* Particle effects */
+.particle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    background: rgba(0, 255, 127, 0.8);
+    animation: particleFloat 12s linear infinite;
+}
+
+.particle:nth-child(odd) {
+    animation-duration: 8s;
+}
+
+.particle:nth-child(even) {
+    animation-duration: 15s;
+}
+
+@keyframes particleFloat {
+    0% {
+        transform: translateY(100vh) translateX(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-10vh) translateX(50px);
+        opacity: 0;
+    }
+}
+
+/* Arctic theme overlay */
+.arctic-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(ellipse at 20% 80%, rgba(135, 206, 235, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(176, 224, 230, 0.1) 0%, transparent 50%);
+    animation: arcticPulse 10s ease-in-out infinite;
+}
+
+@keyframes arcticPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+}

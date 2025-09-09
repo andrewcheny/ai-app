@@ -1,3 +1,6 @@
 streamlit
 autogen-core
 autogen-ext[openai]
+plotly
+pandas
+pyyaml
